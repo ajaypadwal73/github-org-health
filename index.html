@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Org Health — Repository velocity & security for founders</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #0d1117; --muted: #57606a; --accent: #1a7f37;
+      --blue: #0969da; --surface: #f6f8fa; --border: #d0d7de;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; font-size: 16px; color: var(--ink); background: #fff; line-height: 1.6; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 60px;
+      background: rgba(255,255,255,0.93);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--ink); text-decoration: none; }
+    .nav-links { display: flex; gap: 28px; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; transition: color .2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta { font-size: 13px; font-weight: 600; padding: 8px 18px; background: var(--ink); color: #fff; border-radius: 6px; text-decoration: none; transition: opacity .2s; }
+    .nav-cta:hover { opacity: .8; }
+
+    .hero { max-width: 860px; margin: 0 auto; padding: 100px 40px 80px; text-align: center; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: #dafbe1; color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: .04em; padding: 4px 12px; border-radius: 20px; margin-bottom: 28px; }
+    .hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(36px, 6vw, 56px); line-height: 1.12; letter-spacing: -.02em; margin-bottom: 24px; }
+    .hero h1 em { font-style: italic; color: var(--accent); }
+    .hero p { font-size: 18px; color: var(--muted); max-width: 540px; margin: 0 auto 40px; font-weight: 300; }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: #fff; font-size: 15px; font-weight: 600; padding: 13px 28px; border-radius: 8px; text-decoration: none; transition: opacity .15s; }
+    .btn-primary:hover { opacity: .85; }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: #fff; color: var(--ink); font-size: 15px; font-weight: 500; padding: 13px 28px; border-radius: 8px; border: 1px solid var(--border); text-decoration: none; transition: background .15s; }
+    .btn-secondary:hover { background: var(--surface); }
+
+    .preview { max-width: 960px; margin: 0 auto 80px; padding: 0 40px; }
+    .sheet-mock { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,.08); }
+    .sheet-header { background: var(--surface); padding: 10px 16px; border-bottom: 1px solid var(--border); display: flex; gap: 6px; align-items: center; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; } .dot-y { background: #ffbd2e; } .dot-g { background: #28c840; }
+    .sheet-body { background: #fff; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; font-family: 'DM Sans', sans-serif; }
+    th { background: #f0f6ff; color: #0969da; font-weight: 600; font-size: 11px; letter-spacing: .04em; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); border-right: 1px solid var(--border); white-space: nowrap; }
+    td { padding: 7px 12px; border-bottom: 1px solid #f0f0f0; border-right: 1px solid #f0f0f0; white-space: nowrap; }
+    tr:nth-child(even) td { background: #fafafa; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+    .b-red { background: #ffd7d5; color: #cf222e; }
+    .b-yellow { background: #fff8c5; color: #9a6700; }
+    .b-green { background: #dafbe1; color: #1a7f37; }
+    .num-red { color: #cf222e; font-weight: 600; }
+    .num-yellow { color: #9a6700; font-weight: 600; }
+
+    .features { background: var(--surface); padding: 80px 40px; }
+    .features-inner { max-width: 960px; margin: 0 auto; }
+    .section-label { font-size: 12px; font-weight: 600; letter-spacing: .08em; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; }
+    .section-title { font-family: 'DM Serif Display', serif; font-size: clamp(28px, 4vw, 40px); margin-bottom: 48px; line-height: 1.2; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .feature-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 28px; transition: box-shadow .2s; }
+    .feature-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.07); }
+    .feature-icon { font-size: 28px; margin-bottom: 14px; }
+    .feature-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    .how-section { padding: 80px 40px; }
+    .how-inner { max-width: 860px; margin: 0 auto; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; margin-top: 48px; }
+    .step { text-align: center; }
+    .step-num { width: 44px; height: 44px; border-radius: 50%; background: var(--ink); color: #fff; font-weight: 700; font-size: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+    .step h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+    .step p { font-size: 13px; color: var(--muted); }
+
+    .metrics-section { background: var(--ink); color: #fff; padding: 72px 40px; }
+    .metrics-inner { max-width: 860px; margin: 0 auto; text-align: center; }
+    .metrics-inner h2 { font-family: 'DM Serif Display', serif; font-size: clamp(28px, 4vw, 40px); margin-bottom: 48px; }
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 32px; }
+    .metric-val { font-size: 44px; font-weight: 700; font-family: 'DM Serif Display', serif; color: #3fb950; }
+    .metric-label { font-size: 13px; color: rgba(255,255,255,.55); margin-top: 4px; }
+
+    footer { border-top: 1px solid var(--border); padding: 32px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--muted); }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--ink); }
+    .footer-links { display: flex; gap: 24px; }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 20px; } .nav-links { display: none; }
+      .hero { padding: 60px 20px 48px; }
+      .preview { padding: 0 16px; }
+      .features, .how-section, .metrics-section { padding: 60px 20px; }
+      footer { flex-direction: column; text-align: center; padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">🛡️ GitHub Org Health</a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="tos.html">Terms</a>
+  </div>
+  <a class="nav-cta" href="https://workspace.google.com/marketplace" target="_blank">Install Free</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">✦ Google Sheets Add-on</div>
+  <h1>Your GitHub org health,<br><em>inside Google Sheets</em></h1>
+  <p>Instant visibility into PR velocity, stale branches, Dependabot alerts, and license risks — auto-synced every 12 hours.</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="https://workspace.google.com/marketplace" target="_blank">Install Free</a>
+    <a class="btn-secondary" href="#how">See how it works →</a>
+  </div>
+</section>
+
+<div class="preview">
+  <div class="sheet-mock">
+    <div class="sheet-header">
+      <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+      <span style="margin-left:8px;font-size:12px;color:#57606a;font-family:'DM Sans',sans-serif;">Org Health — Google Sheets</span>
+    </div>
+    <div class="sheet-body">
+      <table>
+        <thead>
+          <tr><th>Repo Name</th><th>Private</th><th>Last Commit</th><th>PRs &gt;7d</th><th>Avg PR Cycle</th><th>Dependabot</th><th>GPL Risks</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>api-gateway</strong></td><td><span class="badge b-green">Yes</span></td><td>2d ago</td><td class="num-red">3</td><td>8.2d</td><td class="num-red">7</td><td>0</td><td><span class="badge b-red">🔴 Critical</span></td></tr>
+          <tr><td><strong>frontend-app</strong></td><td><span class="badge b-green">Yes</span></td><td>today</td><td class="num-yellow">1</td><td>3.1d</td><td>0</td><td class="num-yellow">2</td><td><span class="badge b-yellow">🟡 Attention</span></td></tr>
+          <tr><td><strong>data-pipeline</strong></td><td><span class="badge b-green">Yes</span></td><td>1d ago</td><td>0</td><td>1.4d</td><td>0</td><td>0</td><td><span class="badge b-green">🟢 Healthy</span></td></tr>
+          <tr><td><strong>docs-site</strong></td><td><span class="badge b-red">No</span></td><td>5d ago</td><td>0</td><td>—</td><td>0</td><td>0</td><td><span class="badge b-green">🟢 Healthy</span></td></tr>
+          <tr><td><strong>legacy-service</strong></td><td><span class="badge b-green">Yes</span></td><td>32d ago</td><td class="num-red">5</td><td>14.7d</td><td class="num-red">12</td><td class="num-red">3</td><td><span class="badge b-red">🔴 Critical</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<section class="features" id="features">
+  <div class="features-inner">
+    <div class="section-label">What you get</div>
+    <div class="section-title">Everything your eng team needs,<br>in one sheet.</div>
+    <div class="features-grid">
+      <div class="feature-card"><div class="feature-icon">🔀</div><h3>PR Health Tracking</h3><p>See every open PR older than 7 days, average age, and cycle time for merged PRs — across all repos at once.</p></div>
+      <div class="feature-card"><div class="feature-icon">🔒</div><h3>Security Alerts</h3><p>Dependabot vulnerability counts and GPL/AGPL license risks surfaced per repository, color-coded for severity.</p></div>
+      <div class="feature-card"><div class="feature-icon">📊</div><h3>Activity Signals</h3><p>Last commit date, inactive repos (90d+), branch counts, and stale branches older than 30 days.</p></div>
+      <div class="feature-card"><div class="feature-icon">⚡</div><h3>Auto Status</h3><p>Every repo gets a 🔴 Critical / 🟡 Attention / 🟢 Healthy status computed automatically from the metrics.</p></div>
+      <div class="feature-card"><div class="feature-icon">🕐</div><h3>Auto-Sync Every 12h</h3><p>Set it and forget it. The dashboard refreshes automatically every 12 hours — no manual triggering needed.</p></div>
+      <div class="feature-card"><div class="feature-icon">📋</div><h3>Summary Dashboard</h3><p>A separate Summary tab with org-wide KPI cards: total repos, healthy/critical counts, avg PR cycle time.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="how-section" id="how">
+  <div class="how-inner">
+    <div class="section-label">Setup in minutes</div>
+    <div class="section-title">How it works</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><h4>Install the Add-on</h4><p>Install from Google Workspace Marketplace into any Google Sheet.</p></div>
+      <div class="step"><div class="step-num">2</div><h4>Connect GitHub</h4><p>Enter your GitHub PAT and organization name. We validate and save securely in your Google account.</p></div>
+      <div class="step"><div class="step-num">3</div><h4>Hit Sync Now</h4><p>Repos are fetched and processed in batches. Watch the live progress bar in the sidebar.</p></div>
+      <div class="step"><div class="step-num">4</div><h4>Stay in sync</h4><p>Auto-sync runs every 12 hours. Your sheet is always up to date, automatically.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="metrics-section">
+  <div class="metrics-inner">
+    <h2>Built for engineering teams that move fast</h2>
+    <div class="metrics-grid">
+      <div><div class="metric-val">500+</div><div class="metric-label">Repos supported</div></div>
+      <div><div class="metric-val">15</div><div class="metric-label">Metrics per repo</div></div>
+      <div><div class="metric-val">12h</div><div class="metric-label">Auto-sync interval</div></div>
+      <div><div class="metric-val">0</div><div class="metric-label">Lines of code stored externally</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 GitHub Org Health. Built by <a href="https://github.com/ajaypadwal73">@ajaypadwal73</a>.</span>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="tos.html">Terms of Service</a>
+    <a href="mailto:ajaypadwal73@gmail.com">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>
